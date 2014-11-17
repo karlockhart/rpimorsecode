@@ -7,6 +7,9 @@ package co.zer0.raspberrypi.rpimorsecode;
 
 import co.zer0.raspberrypi.rpimorsecode.morsecodeelements.MorseCodeTranslationTable;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,8 +21,12 @@ public class RpiMorseCode {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MorseCodeTranslationTable table = new MorseCodeTranslationTable(
-        new File("./morse_code.def"));
+        try {
+            MorseCodeTranslationTable table = new MorseCodeTranslationTable(
+                    new File("./morse_code.def"));
+        } catch (IOException ex) {
+            Logger.getLogger(RpiMorseCode.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     
 }

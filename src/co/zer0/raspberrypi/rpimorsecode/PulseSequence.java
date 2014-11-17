@@ -16,6 +16,10 @@ import java.util.Iterator;
 public class PulseSequence implements Playable {
    
    ArrayList<Pulse> pulseTrain;
+   
+   public PulseSequence(){
+       pulseTrain = new ArrayList();
+   }
     
    @Override
     public void play(GpioPinDigitalOutput pin) throws Exception {
@@ -26,8 +30,8 @@ public class PulseSequence implements Playable {
         }
    }
    
-   public boolean Add(Pulse pulse){
-       return pulseTrain.add(pulse);
+   public boolean add(Pulse pulse){
+       return this.pulseTrain.add(pulse);
    }
    
 }
