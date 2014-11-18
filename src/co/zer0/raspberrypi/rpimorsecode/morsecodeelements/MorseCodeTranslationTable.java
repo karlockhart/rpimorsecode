@@ -6,6 +6,7 @@
 package co.zer0.raspberrypi.rpimorsecode.morsecodeelements;
 
 import co.zer0.raspberrypi.rpimorsecode.PulseSequence;
+import co.zer0.raspberrypi.rpimorsecode.TimingScheme;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,7 +38,6 @@ public class MorseCodeTranslationTable {
        this.characterMap = new HashMap();
        
        String input;
-       input = null;
        
        while((input = br.readLine()) != null){
           String[] parts =  input.split(",");
@@ -45,6 +45,17 @@ public class MorseCodeTranslationTable {
           PulseSequence sequence = new PulseSequence();
           
           if (parts.length == 2){
+              
+              if (parts[0].equals("ut")){
+                  TimingScheme ts = TimingScheme.getInstance();
+                  Long timing;
+                  try{
+                      timing = Long.parseLong(parts[1]);
+                      ts.setGlobalTimingUnit(timing);
+                  }catch(NumberFormatException e){ /* NOP */ }
+                  continue;   
+              }
+              
               for (int current = 0; current < parts[1].length(); current++ ){
                   if (parts[1].charAt(current) == '.'){
                       sequence.add(dot);                     

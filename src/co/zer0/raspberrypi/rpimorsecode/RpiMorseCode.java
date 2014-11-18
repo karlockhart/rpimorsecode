@@ -39,9 +39,6 @@ public class RpiMorseCode {
     }
     
     public void translate(GpioPinDigitalOutput pin, String message){
-        //For testing the global timing unit is 1 sec
-        TimingScheme ts = TimingScheme.getInstance();
-        ts.setGlobalTimingUnit(100);
         
         //Create a new translation table
         MorseCodeTranslationTable table;
