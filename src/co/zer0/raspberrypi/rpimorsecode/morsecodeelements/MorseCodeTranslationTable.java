@@ -36,47 +36,71 @@ public class MorseCodeTranslationTable {
     public MorseCodeTranslationTable(File file) throws FileNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
 
+        //Create instances of the known pulse types
         Dot dot = new Dot();
         Dash dash = new Dash();
         Space space = new Space();
 
+        //Map to store characters
         this.characterMap = new HashMap();
 
+        //Initialize the input string
         String input;
 
-        while ((input = br.readLine()) != null) {
-            String codeFileSeparator = new Character(CODE_FILE_SEPARATOR).toString();
-            String[] parts = input.split(codeFileSeparator);
+        try {
+            //Read all the lines
+            while ((input = br.readLine()) != null) {
 
-            PulseSequence sequence = new PulseSequence();
+                //Split on the field separator
+                String codeFileSeparator = new Character(CODE_FILE_SEPARATOR).toString();
+                String[] parts = input.split(codeFileSeparator);
 
-            if (parts.length == 2) {
+                //Sequence to store the sequence of pulses
+                PulseSequence sequence = new PulseSequence();
 
-                if (parts[0].equals("ut")) {
-                    TimingScheme ts = TimingScheme.getInstance();
-                    Long timing;
-                    try {
-                        timing = Long.parseLong(parts[1]);
-                        ts.setGlobalTimingUnit(timing);
-                    } catch (NumberFormatException e) { /* NOP */ }
-                    continue;
-                }
+                //If the line split into the right number of fields
+                if (parts.length == 2) {
 
-                for (int current = 0; current < parts[1].length(); current++) {
-                    if (parts[1].charAt(current) == CODE_FILE_DOT) {
-                        sequence.add(dot);
-                    } else if (parts[1].charAt(current) == CODE_FILE_DASH) {
-                        sequence.add(dash);
+                    //Special case for setting the unit time
+                    if (parts[0].equals("ut")) {
+                        TimingScheme ts = TimingScheme.getInstance();
+                        Long timing;
+                        try {
+                            timing = Long.parseLong(parts[1]);
+                            ts.setGlobalTimingUnit(timing);
+                        } catch (NumberFormatException e) { /* NOP */ }
+                        //No matter what happens continue, trust the init value
+                        continue;
+                    }
+
+                    //In cases where it isn't a unit time directive
+                    for (int current = 0; current < parts[1].length(); current++) {
+                        //If it is a dot, add a dot to the sequence
+                        if (parts[1].charAt(current) == CODE_FILE_DOT) {
+                            sequence.add(dot);
+                            //Else add a dash to the sequence
+                        } else if (parts[1].charAt(current) == CODE_FILE_DASH) {
+                            sequence.add(dash);
+                        }
                     }
                 }
+                //Store the complete pulsetrain in the map
+                this.characterMap.put(parts[0].toLowerCase(), sequence);
             }
-            this.characterMap.put(parts[0].toLowerCase(), sequence);
-        }
 
-        PulseSequence sequence = new PulseSequence();
-        sequence.add(space);
-        String separator = new Character(WORD_SEPARATOR).toString();
-        characterMap.put(separator, sequence);
+            //Create the word separator
+            PulseSequence sequence = new PulseSequence();
+            sequence.add(space);
+            String separator = new Character(WORD_SEPARATOR).toString();
+            characterMap.put(separator, sequence);
+
+            br.close();
+
+        } catch (IOException ex) {
+            throw ex;
+        } finally {
+            br.close();
+        }
 
     }
 
@@ -94,6 +118,8 @@ public class MorseCodeTranslationTable {
                         if (current + 1 < cleanedString.length()
                                 && //And it isn't the word separator
                                 cleanedString.charAt(current + 1) != WORD_SEPARATOR) {
+                            logger.log(Level.INFO, "Wait: {0}", (TimingScheme.getInstance().getGlobalTimingUnit()
+                                    * INTER_LETTER_MULTIPLIER));
                             Thread.sleep(TimingScheme.getInstance().getGlobalTimingUnit()
                                     * INTER_LETTER_MULTIPLIER);
                         }
@@ -106,16 +132,22 @@ public class MorseCodeTranslationTable {
     }
 
     private String cleanInputString(String input) {
-
+        //A string builder to store the cleaned string
         StringBuilder cleanedString = new StringBuilder();
 
+        //For each character of the input string
         for (int current = 0; current < input.length(); current++) {
             String thisCharacter = new Character(input.charAt(current)).toString();
+            //Check if the character is in the map
             if (this.characterMap.containsKey(thisCharacter)) {
                 cleanedString.append(thisCharacter);
+            } else {
+                logger.warning("Character " + thisCharacter + " is not defined in the definition file.");
+                //continue
             }
         }
-        logger.info("Cleaned String - " + cleanedString.toString());
+        logger.info("The cleaned string: " + cleanedString.toString());
+        //Return the cleaned string
         return cleanedString.toString();
     }
 }

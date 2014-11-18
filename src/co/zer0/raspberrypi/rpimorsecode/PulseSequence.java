@@ -8,12 +8,16 @@ package co.zer0.raspberrypi.rpimorsecode;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author klockhart
  */
 public class PulseSequence implements Playable {
+
+    static final Logger logger = Logger.getLogger(PulseSequence.class.getName());
 
     ArrayList<Pulse> pulseTrain;
 
@@ -31,6 +35,7 @@ public class PulseSequence implements Playable {
             //If this is between elements of a pulse train
             if (pulseIterator.hasNext()) {
                 //One unit sleep
+                logger.log(Level.INFO, "Wait: {0}", TimingScheme.getInstance().getGlobalTimingUnit());
                 Thread.sleep((long) TimingScheme.getInstance().getGlobalTimingUnit());
             }
         }

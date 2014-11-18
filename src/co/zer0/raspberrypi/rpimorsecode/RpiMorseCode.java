@@ -32,10 +32,20 @@ public class RpiMorseCode {
         RpiMorseCode morse = new RpiMorseCode();
 
         final GpioController gpio = GpioFactory.getInstance();
-        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
+        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MORSE", PinState.LOW);
 
         if (args.length >= 1) {
             morse.translate(pin, args[0]);
+        }else{
+            logger.log(Level.SEVERE, "Arguments: \"message\" <debug>");
+            System.exit(1);
+        }
+        
+        if (args.length >= 2 && args[1].equals("debug"))
+        {
+            Logger.getGlobal().setLevel(Level.ALL);
+        }else{
+            Logger.getGlobal().setLevel(Level.WARNING);
         }
     }
 
@@ -47,10 +57,10 @@ public class RpiMorseCode {
             //Populate it from the morse code definition file
             table = new MorseCodeTranslationTable(
                     new File("./morse_code.def"));
-            //Test by playing simple messge
             table.play(pin, message);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
+            System.exit(1);
         }
     }
 
