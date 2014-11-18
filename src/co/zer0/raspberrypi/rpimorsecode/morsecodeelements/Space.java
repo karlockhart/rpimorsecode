@@ -10,8 +10,13 @@ package co.zer0.raspberrypi.rpimorsecode.morsecodeelements;
  * @author klockhart
  */
 public class Space extends MorseCodePulse{
+    
+    public static final long SPACE_MULTIPLIER = 3;
+    
     Space(){
-        this.multiplier = 3;
+        this.multiplier = SPACE_MULTIPLIER;
+        
+        //The space requires the pin to stay low
         this.setPinHigh = false;
     }
 }

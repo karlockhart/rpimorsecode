@@ -25,8 +25,8 @@ public class PulseSequence implements Playable {
     public void play(GpioPinDigitalOutput pin) throws Exception {
         Iterator ptIterator = pulseTrain.iterator();
         
-        while (pulseTrain.iterator().hasNext()){
-             pulseTrain.iterator().next().play(pin);
+        for (Iterator<Pulse> pulseIterator = pulseTrain.iterator(); pulseIterator.hasNext();){
+             (pulseIterator.next()).play(pin);
         }
    }
    

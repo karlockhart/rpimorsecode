@@ -6,13 +6,14 @@
 package co.zer0.raspberrypi.rpimorsecode.morsecodeelements;
 
 import co.zer0.raspberrypi.rpimorsecode.PulseSequence;
-import co.zer0.raspberrypi.rpimorsecode.RpiMorseCode;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,7 +24,7 @@ public class MorseCodeTranslationTable {
    
    HashMap<String, PulseSequence> characterMap;
    
-   static Logger logger = Logger.getLogger(MorseCodeTranslationTable.class.getName());
+   static final Logger logger = Logger.getLogger(MorseCodeTranslationTable.class.getName());
 
    
    public MorseCodeTranslationTable(File file) throws FileNotFoundException, IOException{
@@ -35,7 +36,9 @@ public class MorseCodeTranslationTable {
                
        this.characterMap = new HashMap();
        
-       String input = null;
+       String input;
+       input = null;
+       
        while((input = br.readLine()) != null){
           String[] parts =  input.split(",");
 
@@ -58,4 +61,19 @@ public class MorseCodeTranslationTable {
        characterMap.put(" ", sequence);
 
    } 
+   
+   public void play(GpioPinDigitalOutput pin, String string){
+       try {
+           if (string != null){
+               for(int current = 0; current < string.length(); current++){
+                   Character character = string.toLowerCase().charAt(current);
+                   if (characterMap.containsKey(character.toString())){
+                       characterMap.get(character.toString()).play(pin);
+                   }
+               }
+           }
+       } catch (Exception ex) {
+           Logger.getLogger(MorseCodeTranslationTable.class.getName()).log(Level.SEVERE, null, ex);
+       }
+   }
 }

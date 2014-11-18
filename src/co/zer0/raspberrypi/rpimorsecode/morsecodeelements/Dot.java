@@ -10,7 +10,10 @@ package co.zer0.raspberrypi.rpimorsecode.morsecodeelements;
  * @author klockhart
  */
 public class Dot extends MorseCodePulse {
+    
+    public static final long DOT_MULTIPLIER = 1;
+    
     Dot(){
-        this.multiplier = 1;
+        this.multiplier = DOT_MULTIPLIER;
     }
 }

@@ -10,7 +10,10 @@ package co.zer0.raspberrypi.rpimorsecode.morsecodeelements;
  * @author klockhart
  */
 public class Dash extends MorseCodePulse{
+    
+    public static final long DASH_MULTIPLIER = 3;
+    
     Dash(){
-        this.multiplier = 3;
+        this.multiplier = DASH_MULTIPLIER;
     }
 }
