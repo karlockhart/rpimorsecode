@@ -26,6 +26,7 @@ public abstract class MorseCodePulse extends Pulse {
             pin.high();
             //System.out.print("High,");
         }
+        //Sleep the required time
         Thread.sleep((long) (timingScheme.getGlobalTimingUnit() * this.multiplier));
         pin.low();
     }

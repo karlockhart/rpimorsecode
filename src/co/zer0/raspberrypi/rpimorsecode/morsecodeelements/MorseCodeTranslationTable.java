@@ -27,7 +27,7 @@ public class MorseCodeTranslationTable {
 
     public static final long INTER_LETTER_MULTIPLIER = 3;
     public static final char WORD_SEPARATOR = ' ';
-    public static final char CODE_FILE_SEPARATOR = '|';
+    public static final char CODE_FILE_SEPARATOR = ' ';
     public static final char CODE_FILE_DOT = '.';
     public static final char CODE_FILE_DASH = '-';
 
@@ -61,7 +61,7 @@ public class MorseCodeTranslationTable {
                     } catch (NumberFormatException e) { /* NOP */ }
                     continue;
                 }
-                
+
                 for (int current = 0; current < parts[1].length(); current++) {
                     if (parts[1].charAt(current) == CODE_FILE_DOT) {
                         sequence.add(dot);
@@ -70,7 +70,7 @@ public class MorseCodeTranslationTable {
                     }
                 }
             }
-            this.characterMap.put(parts[0], sequence);
+            this.characterMap.put(parts[0].toLowerCase(), sequence);
         }
 
         PulseSequence sequence = new PulseSequence();
@@ -81,16 +81,13 @@ public class MorseCodeTranslationTable {
     }
 
     public void play(GpioPinDigitalOutput pin, String inputString) {
+        //Clean the input string
+        String cleanedString = this.cleanInputString(inputString.toLowerCase());
+
         try {
-
-            String separator = new Character(WORD_SEPARATOR).toString();
-
-            //Clean the input string
-            String cleanedString = this.cleanInputString(inputString);
-            
             if (cleanedString != null) {
                 for (int current = 0; current < cleanedString.length(); current++) {
-                    Character character = cleanedString.toLowerCase().charAt(current);
+                    Character character = cleanedString.charAt(current);
                     if (characterMap.containsKey(character.toString())) {
                         characterMap.get(character.toString()).play(pin);
                         //If there is at least one character left
@@ -107,15 +104,14 @@ public class MorseCodeTranslationTable {
             Logger.getLogger(MorseCodeTranslationTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private String cleanInputString(String input){
-        
+
+    private String cleanInputString(String input) {
+
         StringBuilder cleanedString = new StringBuilder();
-        
-        for (int current = 0; current < input.length(); current++)
-        {
+
+        for (int current = 0; current < input.length(); current++) {
             String thisCharacter = new Character(input.charAt(current)).toString();
-            if (this.characterMap.containsKey(thisCharacter)){
+            if (this.characterMap.containsKey(thisCharacter)) {
                 cleanedString.append(thisCharacter);
             }
         }
