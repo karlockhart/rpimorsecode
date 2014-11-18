@@ -119,7 +119,7 @@ public class MorseCodeTranslationTable {
                 cleanedString.append(thisCharacter);
             }
         }
-        
+        logger.info("Cleaned String - " + cleanedString.toString());
         return cleanedString.toString();
     }
 }
