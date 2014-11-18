@@ -21,25 +21,26 @@ import java.util.logging.Logger;
  * @author klockhart
  */
 public class RpiMorseCode {
+
     /**
      * @param args the command line arguments
      */
-    
+
     private static final Logger logger = Logger.getLogger(RpiMorseCode.class.getName());
-    
-    public static void main(String[] args) {      
-       RpiMorseCode morse = new RpiMorseCode();
-       
-       final GpioController gpio = GpioFactory.getInstance();
-       final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
-       
-       if (args.length >= 1){
-           morse.translate(pin, args[0]);
-       }        
+
+    public static void main(String[] args) {
+        RpiMorseCode morse = new RpiMorseCode();
+
+        final GpioController gpio = GpioFactory.getInstance();
+        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
+
+        if (args.length >= 1) {
+            morse.translate(pin, args[0]);
+        }
     }
-    
-    public void translate(GpioPinDigitalOutput pin, String message){
-        
+
+    public void translate(GpioPinDigitalOutput pin, String message) {
+
         //Create a new translation table
         MorseCodeTranslationTable table;
         try {
@@ -50,7 +51,7 @@ public class RpiMorseCode {
             table.play(pin, message);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
-        }             
+        }
     }
-    
+
 }

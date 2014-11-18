@@ -14,24 +14,30 @@ import java.util.Iterator;
  * @author klockhart
  */
 public class PulseSequence implements Playable {
-   
-   ArrayList<Pulse> pulseTrain;
-   
-   public PulseSequence(){
-       pulseTrain = new ArrayList();
-   }
-    
-   @Override
+
+    ArrayList<Pulse> pulseTrain;
+
+    public PulseSequence() {
+        pulseTrain = new ArrayList();
+    }
+
+    @Override
     public void play(GpioPinDigitalOutput pin) throws Exception {
         Iterator ptIterator = pulseTrain.iterator();
-        
-        for (Iterator<Pulse> pulseIterator = pulseTrain.iterator(); pulseIterator.hasNext();){
-             (pulseIterator.next()).play(pin);
+
+        for (Iterator<Pulse> pulseIterator = pulseTrain.iterator(); pulseIterator.hasNext();) {
+            (pulseIterator.next()).play(pin);
+
+            //If this is between elements of a pulse train
+            if (pulseIterator.hasNext()) {
+                //One unit sleep
+                Thread.sleep((long) TimingScheme.getInstance().getGlobalTimingUnit());
+            }
         }
-   }
-   
-   public boolean add(Pulse pulse){
-       return this.pulseTrain.add(pulse);
-   }
-   
+    }
+
+    public boolean add(Pulse pulse) {
+        return this.pulseTrain.add(pulse);
+    }
+
 }

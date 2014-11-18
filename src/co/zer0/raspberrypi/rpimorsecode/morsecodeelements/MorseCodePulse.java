@@ -21,15 +21,13 @@ public abstract class MorseCodePulse extends Pulse {
     @Override
     public void play(GpioPinDigitalOutput pin) throws Exception {
         TimingScheme timingScheme = TimingScheme.getInstance();
-        
-        if (this.setPinHigh == true){
+
+        if (this.setPinHigh == true) {
             pin.high();
             //System.out.print("High,");
         }
         Thread.sleep((long) (timingScheme.getGlobalTimingUnit() * this.multiplier));
         pin.low();
-        //System.out.print("Low,");
-        Thread.sleep((long) timingScheme.getGlobalTimingUnit());
     }
-       
+
 }

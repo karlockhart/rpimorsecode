@@ -12,5 +12,6 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
  * @author klockhart
  */
 public interface Playable {
+
     public void play(GpioPinDigitalOutput pin) throws Exception;
 }
