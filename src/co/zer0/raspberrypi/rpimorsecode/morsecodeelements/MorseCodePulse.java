@@ -23,11 +23,11 @@ public abstract class MorseCodePulse extends Pulse {
         TimingScheme timingScheme = TimingScheme.getInstance();
         
         if (this.setPinHigh == true){
-            //pin.high();
+            pin.high();
             System.out.print("High,");
         }
         Thread.sleep((long) (timingScheme.getGlobalTimingUnit() * this.multiplier));
-        //pin.low();
+        pin.low();
         System.out.print("Low,");
         Thread.sleep((long) timingScheme.getGlobalTimingUnit());
     }

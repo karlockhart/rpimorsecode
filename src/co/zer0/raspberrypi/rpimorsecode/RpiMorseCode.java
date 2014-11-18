@@ -6,7 +6,11 @@
 package co.zer0.raspberrypi.rpimorsecode;
 
 import co.zer0.raspberrypi.rpimorsecode.morsecodeelements.MorseCodeTranslationTable;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -24,7 +28,14 @@ public class RpiMorseCode {
     private static final Logger logger = Logger.getLogger(RpiMorseCode.class.getName());
     
     public static void main(String[] args) {      
-        
+       RpiMorseCode morse = new RpiMorseCode();
+       
+       final GpioController gpio = GpioFactory.getInstance();
+       final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
+       
+       if (args.length >= 1){
+           morse.translate(pin, args[0]);
+       }        
     }
     
     public void translate(GpioPinDigitalOutput pin, String message){
